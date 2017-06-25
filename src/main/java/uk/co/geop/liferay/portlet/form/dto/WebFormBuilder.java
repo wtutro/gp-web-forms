@@ -2,6 +2,8 @@ package uk.co.geop.liferay.portlet.form.dto;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
+import uk.co.geop.liferay.portlet.form.validator.FormValidator;
 
 /**
  * @author Wojciech Tutro
@@ -37,8 +39,9 @@ public class WebFormBuilder {
     }
 
     public WebFormDTO build() {
-        // TODO validators
-
+        if (FormValidator.validateForm(firstName, lastName, email, comment)) {
+            LOGGER.info("All fields are valid");
+        }
         return new WebFormDTO(firstName, lastName, email, comment);
     }
 
