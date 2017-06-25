@@ -2,6 +2,7 @@ package uk.co.geop.liferay.portlet.form.validator;
 
 import com.liferay.portal.kernel.util.Validator;
 import uk.co.geop.liferay.portlet.form.EmptyInputException;
+import uk.co.geop.liferay.portlet.form.dto.WebFormDTO;
 
 /**
  * @author Wojciech Tutro
@@ -25,5 +26,9 @@ public class FormValidator {
         }
         // TODO validate abuse words in comment
         return true;
+    }
+
+    public static boolean validateForm(WebFormDTO formData) {
+        return validateForm(formData.getFirstName(), formData.getLastName(), formData.getEmail(), formData.getComment());
     }
 }

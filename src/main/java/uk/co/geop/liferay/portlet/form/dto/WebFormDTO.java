@@ -13,7 +13,10 @@ public class WebFormDTO {
     private String email;
     private String comment;
 
-    WebFormDTO(String firstName, String lastName, String email, String comment) {
+    public WebFormDTO() {
+    }
+
+    public WebFormDTO(String firstName, String lastName, String email, String comment) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -51,4 +54,6 @@ public class WebFormDTO {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+
 }
