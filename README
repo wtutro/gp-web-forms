@@ -1,5 +1,10 @@
 Maven based project generated from maven archetype for Liferay version 6.2.4.
 
-Additional plugins used:
+Please keep in mind that some of the classes during developing of a production portlet (not just a 'coding task') should be moved to common library outside current portlet, ex.:
+ - BaseController
+ - Utils classes
+ - Constants classes
+ - etc.
+
+Maven additional plugins used:
 - jgitflow: https://bitbucket.org/atlassian/jgit-flow/wiki/Home - plugin for maven to use git branching model called gitflow: http://nvie.com/posts/a-successful-git-branching-model/
-- 
