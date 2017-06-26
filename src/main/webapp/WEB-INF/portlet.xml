@@ -13,6 +13,7 @@
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
+		<resource-bundle>messages</resource-bundle>
 		<portlet-info>
 			<title>gp-web-forms</title>
 			<short-title>gp-web-forms</short-title>

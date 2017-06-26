@@ -3,6 +3,8 @@
 <%@ page import="com.liferay.portal.kernel.util.Validator" %>
 <%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
 <%@ page import="com.liferay.portal.util.PortalUtil" %>
+<%@ page import="com.liferay.portal.kernel.util.GetterUtil" %>
+<%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 
@@ -25,4 +27,6 @@
     if (Validator.isNotNull(portletResource)) {
         preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
     }
+
+    String absurdWords = GetterUtil.getString(portletPreferences.getValue("absurdWords", null), "cow");
 %>
