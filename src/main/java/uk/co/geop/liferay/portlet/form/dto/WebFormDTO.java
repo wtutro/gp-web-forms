@@ -12,15 +12,19 @@ public class WebFormDTO {
     private String lastName;
     private String email;
     private String comment;
+    private String portletId;
+    private long plid;
 
     public WebFormDTO() {
     }
 
-    public WebFormDTO(String firstName, String lastName, String email, String comment) {
+    public WebFormDTO(String firstName, String lastName, String email, String comment, String portletId, long plid) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.comment = comment;
+        this.portletId = portletId;
+        this.plid = plid;
     }
 
     public String getFirstName() {
@@ -55,5 +59,19 @@ public class WebFormDTO {
         this.comment = comment;
     }
 
+    public String getPortletId() {
+        return portletId;
+    }
 
+    public void setPortletId(String portletId) {
+        this.portletId = portletId;
+    }
+
+    public long getPlid() {
+        return plid;
+    }
+
+    public void setPlid(long plid) {
+        this.plid = plid;
+    }
 }

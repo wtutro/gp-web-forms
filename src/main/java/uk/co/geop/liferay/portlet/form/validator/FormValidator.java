@@ -8,6 +8,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.PortletPreferences;
+import com.liferay.portal.security.auth.EmailAddressValidator;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
@@ -23,9 +24,8 @@ import uk.co.geop.liferay.portlet.form.dto.WebFormDTO;
 public class FormValidator {
 
     private static final Log LOGGER = LogFactoryUtil.getLog(FormValidator.class);
-    private static final String PORTLET_ID = "gpwebforms_WAR_gpweb";
 
-    public static boolean validateForm(String firstName, String lastName, String email, String comment) {
+    public static boolean validateForm(String firstName, String lastName, String email, String comment, String portletId, long plid) {
         if (Validator.isNull(firstName)) {
             throw new EmptyInputException("firstName is empty");
         }
@@ -35,27 +35,26 @@ public class FormValidator {
         if (Validator.isNull(email)) {
             throw new EmptyInputException("email is empty");
         }
-        // TODO validate email format
+        if (!Validator.isAddress(email)) {
+            throw new EmptyInputException("email is not valid");
+        }
         if (Validator.isNull(comment)) {
             throw new EmptyInputException("comment is empty");
         }
-        // TODO validate abuse words in comment
-        if (!validateAbusedWords(comment)) {
+        if (!validateAbusedWords(comment, portletId, plid)) {
             throw new EmptyInputException("Comment contains abusing words");
         }
         return true;
     }
 
-    private static boolean validateAbusedWords(String comment) {
-        final String groupName = GroupConstants.GUEST;
-        final long companyId = PortalUtil.getDefaultCompanyId();
-        long groupId = 0;
+    private static boolean validateAbusedWords(String comment, String portletId, long plid) {
+        if (portletId.startsWith("_")) {
+            portletId = portletId.substring(1, portletId.length()-1);
+        }
         try {
-            groupId = GroupLocalServiceUtil.getGroup(companyId, groupName).getGroupId();
-            PortletPreferences portletPreferences = PortletPreferencesLocalServiceUtil
-                    .getPortletPreferences(groupId, PortletKeys.PREFS_OWNER_TYPE_GROUP, 0, PORTLET_ID);
+            PortletPreferences portletPreferences = PortletPreferencesLocalServiceUtil.getPortletPreferences(0, PortletKeys.PREFS_OWNER_TYPE_LAYOUT, plid, portletId);
             javax.portlet.PortletPreferences prefs = PortletPreferencesFactoryUtil.fromDefaultXML(portletPreferences.getPreferences());
-            String abusingWords = GetterUtil.getString(prefs.getValue("assetCategoryIds", null), null);
+            String abusingWords = GetterUtil.getString(prefs.getValue("abusingWords", null), null);
             if (abusingWords != null) {
                 String abusingWordsArray[] = abusingWords.split("\\r?\\n");
                 for (String abusingWord : abusingWordsArray) {
@@ -72,10 +71,10 @@ public class FormValidator {
             LOGGER.error("Error during validation", e);
             return false;
         }
-        return false;
+        return true;
     }
 
     public static boolean validateForm(WebFormDTO formData) {
-        return validateForm(formData.getFirstName(), formData.getLastName(), formData.getEmail(), formData.getComment());
+        return validateForm(formData.getFirstName(), formData.getLastName(), formData.getEmail(), formData.getComment(), formData.getPortletId(), formData.getPlid());
     }
 }

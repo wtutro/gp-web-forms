@@ -19,6 +19,8 @@ public class WebFormBuilder {
     private String lastName;
     private String email;
     private String comment;
+    private String portletId;
+    private long plid;
 
     public WebFormBuilder withFirstName(String firstName) {
         this.firstName = firstName;
@@ -40,11 +42,21 @@ public class WebFormBuilder {
         return this;
     }
 
+    public WebFormBuilder withPortletId(String portletId) {
+        this.portletId = portletId;
+        return this;
+    }
+
+    public WebFormBuilder withPlid(long plid) {
+        this.plid = plid;
+        return this;
+    }
+
     public WebFormDTO build() {
-        if (FormValidator.validateForm(firstName, lastName, email, comment)) {
+        if (FormValidator.validateForm(firstName, lastName, email, comment, portletId, plid)) {
             LOGGER.info("All fields are valid");
         }
-        return new WebFormDTO(firstName, lastName, email, comment);
+        return new WebFormDTO(firstName, lastName, email, comment, portletId, plid);
     }
 
 }
