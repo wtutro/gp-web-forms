@@ -1,35 +1,70 @@
 AUI.add('gp-web-form', function (A) {
 
-        var GPForm = function (portletNamespace, formName) {
+        var GPForm = function (portletNamespace, formNode, plid) {
             var instance = this;
             instance.portletNamespace = portletNamespace;
-            instance.formName = formName;
+            instance.formNode = formNode;
+            instance.plid = plid;
         };
 
         GPForm.prototype = {
-            submitForm: function () {
+            init: function () {
                 var instance = this;
-                var url = document[instance.portletNamespace + instance.formName].action;
-                var data = {};
-                //TODO add formId to submit
+                instance.formNode.on('submit', function (e) {
+                    e.preventDefault();
+                    instance._submitForm();
+                });
+            },
 
-                A.io.request(url,
-                    {
-                        method: 'POST',
-                        data: data,
-                        dataType: 'json',
-                        on: {
-                            success: function () {
-                                var data = this.get('responseData');
-                                if (data.status === 'SUCCESS') {
-                                    // TODO success
-                                } else if (data.status === 'ERROR') {
-                                    // TODO error
+            _submitForm: function () {
+                var instance = this;
+
+                var hasErrors = false;
+                var liferayForm = Liferay.Form.get(instance.formNode.get('id'));
+
+                if (liferayForm) {
+                    var validator = liferayForm.formValidator;
+
+                    if (A.instanceOf(validator, A.FormValidator)) {
+                        validator.validate();
+                        hasErrors = validator.hasErrors();
+
+                        if (hasErrors) {
+                            validator.focusInvalidField();
+                        }
+                    }
+                }
+
+                if (!hasErrors) {
+                    var data = {
+                        "firstName": instance.formNode.one('#' + instance.portletNamespace + 'firstName').val(),
+                        "lastName": instance.formNode.one('#' + instance.portletNamespace + 'lastName').val(),
+                        "email": instance.formNode.one('#' + instance.portletNamespace + 'email').val(),
+                        "comment": instance.formNode.one('#' + instance.portletNamespace + 'comment').val(),
+                        "portletId": instance.portletNamespace,
+                        "plid": instance.plid
+                    };
+
+                    A.io.request('/gp-forms-portlet/rest/webform/submit',
+                        {
+                            method: 'POST',
+                            data: A.JSON.stringify(data),
+                            dataType: 'json',
+                            headers: {'Content-Type': 'application/json; charset=utf-8'},
+                            on: {
+                                success: function () {
+                                    // form submit has been accepted show the "thank you message"
+                                    var data = this.get('responseData');
+                                    console.log('on-success-> ' + data)
+                                },
+                                error: function () {
+                                    var data = this.get('responseData');
+                                    console.log('on-error-> ' + data)
                                 }
                             }
                         }
-                    }
-                );
+                    );
+                }
             }
         };
 
@@ -37,6 +72,6 @@ AUI.add('gp-web-form', function (A) {
     },
     '',
     {
-        requires: ['aui-node', 'aui-io-request', 'liferay-util-window', 'liferay-portlet-url', 'json']
+        requires: ['aui-node', 'aui-io-request', 'liferay-util-window', 'liferay-portlet-url', 'json', 'liferay-form']
     }
 );
