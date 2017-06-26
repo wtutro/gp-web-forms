@@ -54,11 +54,11 @@ public class FormValidator {
         try {
             PortletPreferences portletPreferences = PortletPreferencesLocalServiceUtil.getPortletPreferences(0, PortletKeys.PREFS_OWNER_TYPE_LAYOUT, plid, portletId);
             javax.portlet.PortletPreferences prefs = PortletPreferencesFactoryUtil.fromDefaultXML(portletPreferences.getPreferences());
-            String abusingWords = GetterUtil.getString(prefs.getValue("abusingWords", null), null);
+            String abusingWords = GetterUtil.getString(prefs.getValue("abusingWords", "Cow"), null);
             if (abusingWords != null) {
                 String abusingWordsArray[] = abusingWords.split("\\r?\\n");
                 for (String abusingWord : abusingWordsArray) {
-                    if (comment.contains(abusingWord.trim())) {
+                    if (comment.toLowerCase().contains(abusingWord.toLowerCase().trim())) {
                         LOGGER.warn("Abusing word found " + abusingWord);
                         return false;
                     }
