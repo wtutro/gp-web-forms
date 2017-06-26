@@ -11,6 +11,8 @@
 <aui:input name="<%=Constants.CMD%>" type="hidden" value="<%=Constants.UPDATE%>"/>
 
 <aui:input name="preferences--abusingWords--" type="textarea" label="abusingWords.label" value="<%=abusingWords%>"/>
+<aui:input name="preferences--contactTime--" type="text" label="contactTime.label" value="<%=contactTime%>"/>
+
 
 <aui:button-row>
     <aui:button type="submit"/>

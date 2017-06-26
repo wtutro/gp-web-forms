@@ -29,4 +29,5 @@
     }
 
     String abusingWords = GetterUtil.getString(portletPreferences.getValue("abusingWords", null), "cow");
+    String contactTime = GetterUtil.getString(portletPreferences.getValue("contactTime", null), "24h");
 %>
