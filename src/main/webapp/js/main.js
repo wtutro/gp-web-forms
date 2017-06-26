@@ -1,15 +1,23 @@
 AUI.add('gp-web-form', function (A) {
 
-        var GPForm = function (portletNamespace, formName) {
+        var GPForm = function (portletNamespace, formNode) {
             var instance = this;
             instance.portletNamespace = portletNamespace;
-            instance.formName = formName;
+            instance.formNode = formNode;
         };
 
         GPForm.prototype = {
-            submitForm: function () {
+            init: function() {
                 var instance = this;
-                var url = document[instance.portletNamespace + instance.formName].action;
+                instance.formNode.on('submit', function(e) {
+                    instance._submitForm();
+                });
+            },
+
+            _submitForm: function () {
+                var instance = this;
+                console.log(instance.portletNamespace + ' submit hit ->');
+                /*var url = document[instance.portletNamespace + instance.formName].action;
                 var data = {};
                 //TODO add formId to submit
 
@@ -29,7 +37,7 @@ AUI.add('gp-web-form', function (A) {
                             }
                         }
                     }
-                );
+                );*/
             }
         };
 
@@ -37,6 +45,6 @@ AUI.add('gp-web-form', function (A) {
     },
     '',
     {
-        requires: ['aui-node', 'aui-io-request', 'liferay-util-window', 'liferay-portlet-url', 'json']
+        requires: ['aui-node', 'aui-io-request', 'liferay-util-window', 'liferay-portlet-url', 'json', 'liferay-form']
     }
 );

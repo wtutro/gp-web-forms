@@ -16,11 +16,12 @@
         </aui:row>
     </aui:fieldset>
 
-    <aui:input name="submit" type="submit"/>
+    <aui:button type="submit"/>
 </aui:form>
 
 <script type="text/javascript">
-    AUI().use(function(A) {
-
+    new AUI().use('gp-web-form', function (A) {
+        var gpForm = new Liferay.Portlet.GPForm('<portlet:namespace/>', A.one('#<portlet:namespace/>' + 'gp-form'), '');
+        gpForm.init();
     });
 </script>
