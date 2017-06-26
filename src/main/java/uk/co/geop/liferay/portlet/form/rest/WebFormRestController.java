@@ -1,5 +1,7 @@
 package uk.co.geop.liferay.portlet.form.rest;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import uk.co.geop.liferay.portlet.form.EmptyInputException;

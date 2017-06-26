@@ -2,6 +2,8 @@ package uk.co.geop.liferay.portlet.form.validator;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.GroupConstants;
@@ -20,6 +22,9 @@ import uk.co.geop.liferay.portlet.form.dto.WebFormDTO;
  */
 public class FormValidator {
 
+    private static final Log LOGGER = LogFactoryUtil.getLog(FormValidator.class);
+    private static final String PORTLET_ID = "gpwebforms_WAR_gpweb";
+
     public static boolean validateForm(String firstName, String lastName, String email, String comment) {
         if (Validator.isNull(firstName)) {
             throw new EmptyInputException("firstName is empty");
@@ -35,18 +40,38 @@ public class FormValidator {
             throw new EmptyInputException("comment is empty");
         }
         // TODO validate abuse words in comment
+        if (!validateAbusedWords(comment)) {
+            throw new EmptyInputException("Comment contains abusing words");
+        }
         return true;
     }
 
-    private boolean validateAbusedWords(String content) throws SystemException, PortalException {
+    private static boolean validateAbusedWords(String comment) {
         final String groupName = GroupConstants.GUEST;
         final long companyId = PortalUtil.getDefaultCompanyId();
-        long groupId = GroupLocalServiceUtil.getGroup(companyId, groupName).getGroupId();
-        PortletPreferences portletPreferences = PortletPreferencesLocalServiceUtil
-                .getPortletPreferences(groupId, PortletKeys.PREFS_OWNER_TYPE_GROUP, 0, "gpwebforms_WAR_gpwebformsportlet");
-        javax.portlet.PortletPreferences prefs = PortletPreferencesFactoryUtil.fromDefaultXML(portletPreferences.getPreferences());
-        String abusingWords = GetterUtil.getString(prefs.getValue("assetCategoryIds", null), null);
-
+        long groupId = 0;
+        try {
+            groupId = GroupLocalServiceUtil.getGroup(companyId, groupName).getGroupId();
+            PortletPreferences portletPreferences = PortletPreferencesLocalServiceUtil
+                    .getPortletPreferences(groupId, PortletKeys.PREFS_OWNER_TYPE_GROUP, 0, PORTLET_ID);
+            javax.portlet.PortletPreferences prefs = PortletPreferencesFactoryUtil.fromDefaultXML(portletPreferences.getPreferences());
+            String abusingWords = GetterUtil.getString(prefs.getValue("assetCategoryIds", null), null);
+            if (abusingWords != null) {
+                String abusingWordsArray[] = abusingWords.split("\\r?\\n");
+                for (String abusingWord : abusingWordsArray) {
+                    if (comment.contains(abusingWord.trim())) {
+                        LOGGER.warn("Abusing word found " + abusingWord);
+                        return false;
+                    }
+                }
+            }
+        } catch (PortalException e) {
+            LOGGER.error("Error during validation", e);
+            return false;
+        } catch (SystemException e) {
+            LOGGER.error("Error during validation", e);
+            return false;
+        }
         return false;
     }
 

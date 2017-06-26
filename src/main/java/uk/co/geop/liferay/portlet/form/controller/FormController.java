@@ -34,7 +34,6 @@ public class FormController extends MVCPortlet {
         } catch (EmptyInputException e) {
             LOGGER.error("Validation failed", e);
             response.setRenderParameter("action", e.getMessage());
-
         }
         //@formatter:on
         response.setRenderParameter("action", "success");
