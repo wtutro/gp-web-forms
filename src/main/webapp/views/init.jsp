@@ -28,5 +28,5 @@
         preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
     }
 
-    String absurdWords = GetterUtil.getString(portletPreferences.getValue("absurdWords", null), "cow");
+    String abusingWords = GetterUtil.getString(portletPreferences.getValue("abusingWords", null), "cow");
 %>

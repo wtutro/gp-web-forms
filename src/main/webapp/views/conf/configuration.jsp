@@ -10,7 +10,7 @@
 <aui:form action="<%=actionURL%>" method="post" name="confForm">
 <aui:input name="<%=Constants.CMD%>" type="hidden" value="<%=Constants.UPDATE%>"/>
 
-<aui:input name="preferences--absurdWords--" type="textarea" label="absurdWords.label" value="<%=absurdWords%>"/>
+<aui:input name="preferences--abusingWords--" type="textarea" label="abusingWords.label" value="<%=abusingWords%>"/>
 
 <aui:button-row>
     <aui:button type="submit"/>
