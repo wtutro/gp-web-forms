@@ -8,10 +8,10 @@
     <aui:fieldset>
         <aui:row>
             <aui:col>
-                <aui:input name="firstName" type="text" label="first.name"/>
-                <aui:input name="lastName" type="text" label="last.name"/>
-                <aui:input name="email" type="email" label="email"/>
-                <aui:input name="comment" type="textarea" label="comment"/>
+                <aui:input name="firstName" type="text" label="first.name" required="true"/>
+                <aui:input name="lastName" type="text" label="last.name" required="true"/>
+                <aui:input name="email" type="email" label="email" required="true"/>
+                <aui:input name="comment" type="textarea" label="comment" required="true"/>
             </aui:col>
         </aui:row>
     </aui:fieldset>
@@ -21,7 +21,7 @@
 
 <script type="text/javascript">
     new AUI().use('gp-web-form', function (A) {
-        var gpForm = new Liferay.Portlet.GPForm('<portlet:namespace/>', A.one('#<portlet:namespace/>' + 'gp-form'), '');
+        var gpForm = new Liferay.Portlet.GPForm('<portlet:namespace/>', A.one('#<portlet:namespace/>' + 'gp-form'), <%= plid %>);
         gpForm.init();
     });
 </script>
