@@ -7,6 +7,7 @@ Please keep in mind that some of the classes during developing of a production p
 
 Maven additional plugins used:
 - jgitflow: https://bitbucket.org/atlassian/jgit-flow/wiki/Home - plugin for maven to use git branching model called gitflow: http://nvie.com/posts/a-successful-git-branching-model/
+- automatic release using maven and git flow model, ex: mvn -B jgitflow:release-start jgitflow:release-finish -DallowSnapshots -DnoDeploy -DpushRelease
 
 We used 2 ways of handling Language resources:
 1) messages.resources this can handle only messages inside portlet
