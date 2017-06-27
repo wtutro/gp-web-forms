@@ -12,4 +12,14 @@ We used 2 ways of handling Language resources:
 1) messages.resources this can handle only messages inside portlet
 2) using hook and extending Liferay language files - this can override or add new keys. This is helpful if You add for example new category name in liferay-display.xml or if You want to override some default messages from liferay
 
-Fields are validated in JavaScript and in Java, except comment. Abusing words are filtered only on server side to show how this kind of validation can be done using AlloyUI and Jersey. Abusing words can be also handled by AlloyUI FormValidator by creating
+Fields are validated in JavaScript and in Java, except comment. Abusing words are filtered only on server side to show how this kind of validation can be done using AlloyUI and Jersey.
+Abusing words can be also handled by AlloyUI FormValidator by using:
+A.mix(A.config.FormValidator.RULES, {
+    abuseWords: function(val, node, ruleValue) {
+        if (ruleValue) {
+            // check if words from comment are on the abusingWords list
+        }
+        return true;
+    }
+}, true);
+and than add this rule to form validator for this particular form.

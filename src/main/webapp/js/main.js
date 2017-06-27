@@ -53,7 +53,6 @@ AUI.add('gp-web-form', function (A) {
                         {
                             method: 'POST',
                             data: A.JSON.stringify(data),
-                            dataType: 'json',
                             headers: {'Content-Type': 'application/json; charset=utf-8'},
                             on: {
                                 success: function () {
@@ -66,7 +65,35 @@ AUI.add('gp-web-form', function (A) {
                                     instance.formNode.get('parentNode').html(thankYouMessageHTML);
                                 },
                                 failure: function () {
-                                    console.log('on-error-> ' + this)
+                                    var formValidator = Liferay.Form.get(instance.portletNamespace + 'gp-form').formValidator;
+                                    var commentNode = instance.formNode.one('#' + instance.portletNamespace + 'comment');
+                                    formValidator.highlight(commentNode, false);
+                                    var dialog = Liferay.Util.Window.getWindow(
+                                        {
+                                            dialog: {
+                                                destroyOnHide: true,
+                                                modal: true,
+                                                width: 600,
+                                                height: 400,
+                                                bodyContent: '<b>' + Liferay.Language.get('comment.contains.abusing.words') + '</b>',
+                                                toolbars: {
+                                                    footer: [
+                                                        {
+                                                            on: {
+                                                                click: function (event) {
+                                                                    event.domEvent.preventDefault();
+                                                                    dialog.hide();
+                                                                }
+                                                            },
+                                                            label: Liferay.Language.get('ok'),
+                                                            primary: true
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            title: Liferay.Language.get('warning')
+                                        }
+                                    ).render();
                                 }
                             }
                         }
