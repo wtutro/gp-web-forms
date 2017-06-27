@@ -1,10 +1,13 @@
 AUI.add('gp-web-form', function (A) {
 
-        var GPForm = function (portletNamespace, formNode, plid) {
+        var TPL_THANKS_MESSAGE = A.Template('<h3>Thanks for contacting us and somebody will respond in {hrsMessage}</h3>' +
+            '<div><img src="http://lorempixel.com/780/480/business/" alt="thank you" style="opacity:0.8"/></div>');
+        var GPForm = function (portletNamespace, formNode, plid, hrsMessage) {
             var instance = this;
             instance.portletNamespace = portletNamespace;
             instance.formNode = formNode;
             instance.plid = plid;
+            instance.hrsMessage = hrsMessage;
         };
 
         GPForm.prototype = {
@@ -14,6 +17,7 @@ AUI.add('gp-web-form', function (A) {
                     e.preventDefault();
                     instance._submitForm();
                 });
+                console.log('GPForm initialized');
             },
 
             _submitForm: function () {
@@ -54,12 +58,15 @@ AUI.add('gp-web-form', function (A) {
                             on: {
                                 success: function () {
                                     // form submit has been accepted show the "thank you message"
-                                    var data = this.get('responseData');
-                                    console.log('on-success-> ' + data)
+                                    var thankYouMessageHTML = TPL_THANKS_MESSAGE.parse(
+                                        {
+                                            hrsMessage: instance.hrsMessage
+                                        }
+                                    );
+                                    instance.formNode.get('parentNode').html(thankYouMessageHTML);
                                 },
-                                error: function () {
-                                    var data = this.get('responseData');
-                                    console.log('on-error-> ' + data)
+                                failure: function () {
+                                    console.log('on-error-> ' + this)
                                 }
                             }
                         }
@@ -72,6 +79,6 @@ AUI.add('gp-web-form', function (A) {
     },
     '',
     {
-        requires: ['aui-node', 'aui-io-request', 'liferay-util-window', 'liferay-portlet-url', 'json', 'liferay-form']
+        requires: ['aui-node', 'aui-io-request', 'liferay-util-window', 'liferay-portlet-url', 'json', 'liferay-form', 'aui-template-deprecated']
     }
 );
