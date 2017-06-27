@@ -15,6 +15,17 @@ public class WebFormDTO {
     private String portletId;
     private long plid;
 
+    @Override public String toString() {
+        return "WebFormDTO{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", comment='" + comment + '\'' +
+                ", portletId='" + portletId + '\'' +
+                ", plid=" + plid +
+                '}';
+    }
+
     public WebFormDTO() {
     }
 
